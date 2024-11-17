@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "696803426868",
+    "firebase_url": "https://habitai-e5802-default-rtdb.firebaseio.com",
+    "project_id": "habitai-e5802",
+    "storage_bucket": "habitai-e5802.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696803426868:android:502fd0f767d0e086390061",
+        "android_client_info": {
+          "package_name": "com.example.habitai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7qAo1wDReeij_H0uwCVVnBOghK7nGxgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

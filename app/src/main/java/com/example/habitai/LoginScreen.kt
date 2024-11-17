@@ -1,5 +1,6 @@
 package com.example.habitai
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -28,6 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.habitai.ui.theme.HabITAITheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 
 
 //val customFontFamily = FontFamily(
@@ -38,6 +43,9 @@ import com.example.habitai.ui.theme.HabITAITheme
 fun LoginScreen() {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val auth = Firebase.auth
+    val db = Firebase.firestore
 
     Column(
         modifier = Modifier
@@ -82,6 +90,45 @@ fun LoginScreen() {
 
         Button(
             onClick = {
+                if (username.isNotEmpty() && password.isNotEmpty()) {
+                    //dummy email format for Firebase Authentication
+                    val email = "$username@habit.com"
+
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val uid = task.result?.user?.uid
+                                uid?.let {
+                                    db.collection("users").document(it).get()
+                                        .addOnSuccessListener { document ->
+                                            if (document.exists()) {
+                                                val storedUsername = document.getString("username")
+                                                if (storedUsername == username)
+                                                {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Login Successful!",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        }
+                                }
+                            }
+                            else
+                            {
+                                Toast.makeText(
+                                    context,
+                                    "Incorrect Password or Username",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                }
+                else
+                {
+                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                }
 
             },
             modifier = Modifier.border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(26.dp)).fillMaxWidth(),

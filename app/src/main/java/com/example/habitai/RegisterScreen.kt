@@ -1,5 +1,6 @@
 package com.example.habitai
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.habitai.ui.theme.HabITAITheme
+import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 //val customFontFamily = FontFamily(
@@ -31,6 +35,9 @@ import com.example.habitai.ui.theme.HabITAITheme
 fun RegisterScreen() {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
 
     Column(
         modifier = Modifier
@@ -75,7 +82,35 @@ fun RegisterScreen() {
 
         Button(
             onClick = {
+                if (username.isNotEmpty() && password.isNotEmpty()) {
+                    //dummy email format for Firebase Authentication
+                    val email = "$username@habit.com"
 
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val uid = task.result?.user?.uid
+                                //save the username and UID in Firestore
+                                val userData = hashMapOf("username" to username, "uid" to uid)
+                                uid?.let {
+                                    db.collection("users").document(it).set(userData)
+                                }
+                                Toast.makeText(
+                                    context,
+                                    "Registration Successful!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "${task.exception?.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                } else {
+                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                }
             },
             modifier = Modifier.border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(26.dp)).fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(

@@ -3,7 +3,7 @@
 ### Team Composition:
 - Timothy Jayden Klint
 - Joshua Benjamin Kravitz
-- Dylan Reginald Savelson
+- Dylan  Savelson
 
 ### Important Links:
 - Figma link: TODO
