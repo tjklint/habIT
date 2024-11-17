@@ -26,11 +26,22 @@ class TaskViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                // Add system instructions to guide the AI
+                val refinedPrompt = """
+                You are an expert in productivity, discipline, task management, and routines.
+                Only provide information about tasks, discipline, or routines. 
+                Be concise and provide practical advice. 
+                Cite relevant books, studies, or research if applicable.
+                
+                User query: $prompt
+            """.trimIndent()
+
                 val response = generativeModel.generateContent(
                     content {
-                        text(prompt)
+                        text(refinedPrompt)
                     }
                 )
+
                 response.text?.let { outputContent ->
                     _uiState.value = UiState.Success(outputContent)
                 }
@@ -39,4 +50,5 @@ class TaskViewModel : ViewModel() {
             }
         }
     }
+
 }
