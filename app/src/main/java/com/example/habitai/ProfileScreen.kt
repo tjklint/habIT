@@ -52,11 +52,11 @@ fun ProfileScreen() {
                     )
                 }
             },
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFF5A234)), // Customize the color
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFF5A234)),
             modifier = Modifier.fillMaxWidth()
         )
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(16.dp),
         ) {
 
 
@@ -70,8 +70,7 @@ fun ProfileScreen() {
                         Color(0xFFFFE082),
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .padding(horizontal = 16.dp)
-                    .padding(end = 16.dp),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
 
             ) {
