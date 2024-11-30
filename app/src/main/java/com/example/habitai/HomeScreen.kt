@@ -57,6 +57,8 @@ fun HomeScreen() {
 
             // "View Profile" Button
             ButtonWithImage(text = "View Profile", imageRes = R.drawable.profile,"profile_screen",navController)
+
+            ButtonWithImage(text = "Improve Routine", imageRes = R.drawable.smiling,"task_screen",navController)
         }
     }
 }

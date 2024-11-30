@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.habitai.ui.theme.HabITAITheme
+import com.google.android.gms.tasks.Task
+
 val LocalNavController = compositionLocalOf<NavHostController> { error("No NavController found!") }
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,10 @@ class MainActivity : ComponentActivity() {
                         composable("profile_screen"){
                             ProfileScreen()
                         }
+                        composable("task_screen"){
+                            TaskScreen()
+                        }
+
 
                     }
                 }
