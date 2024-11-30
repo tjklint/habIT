@@ -14,10 +14,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.habitai.ui.theme.HabITAITheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
+    val navController = LocalNavController.current
     Column(modifier = Modifier.fillMaxSize()) {
 
         TopAppBar(
@@ -48,21 +50,21 @@ fun HomeScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // "Add Tasks" Button
-            ButtonWithImage(text = "Add Tasks", imageRes = R.drawable.smiling_sun)
+            ButtonWithImage(text = "Add Tasks", imageRes = R.drawable.smiling_sun,"task_screen",navController)
 
             // "View Calendar" Button
-            ButtonWithImage(text = "View Calendar", imageRes = R.drawable.calendar)
+            ButtonWithImage(text = "View Calendar", imageRes = R.drawable.calendar,"calendar_screen",navController)
 
             // "View Profile" Button
-            ButtonWithImage(text = "View Profile", imageRes = R.drawable.profile)
+            ButtonWithImage(text = "View Profile", imageRes = R.drawable.profile,"profile_screen",navController)
         }
     }
 }
 
 @Composable
-fun ButtonWithImage(text: String, imageRes: Int) {
+fun ButtonWithImage(text: String, imageRes: Int,navigation:String,navController: NavController) {
     Button(
-        onClick = {  },
+        onClick = {navController.navigate(navigation) },
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)

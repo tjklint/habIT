@@ -32,6 +32,9 @@ class MainActivity : ComponentActivity() {
                         composable("home_screen") {
                             HomeScreen()
                         }
+                        composable("profile_screen"){
+                            ProfileScreen()
+                        }
 
                     }
                 }
