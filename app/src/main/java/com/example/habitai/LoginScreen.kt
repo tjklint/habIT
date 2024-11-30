@@ -54,6 +54,8 @@ fun LoginScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        val navController = LocalNavController.current
         Text(text = "Login", fontSize = 40.sp)
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -110,6 +112,7 @@ fun LoginScreen() {
                                                         "Login Successful!",
                                                         Toast.LENGTH_SHORT
                                                     ).show()
+                                                    navController.navigate("home_screen")
                                                 }
                                             }
                                         }
@@ -145,7 +148,7 @@ fun LoginScreen() {
 
         Button(
             onClick = {
-
+                navController.navigate("register_screen")
             },
             modifier = Modifier.border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(26.dp)).fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
