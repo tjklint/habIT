@@ -40,6 +40,12 @@ class MainActivity : ComponentActivity() {
                         composable("task_screen"){
                             TaskScreen()
                         }
+                        composable("taskmanager_screen"){
+                            TaskManagerScreen()
+                        }
+                        composable("calendar_screen"){
+                            TaskManagerScreen()
+                        }
 
 
                     }

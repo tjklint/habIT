@@ -50,7 +50,7 @@ fun HomeScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // "Add Tasks" Button
-            ButtonWithImage(text = "Add Tasks", imageRes = R.drawable.smiling_sun,"task_screen",navController)
+            ButtonWithImage(text = "Add Tasks", imageRes = R.drawable.smiling_sun,"taskmanager_screen",navController)
 
             // "View Calendar" Button
             ButtonWithImage(text = "View Calendar", imageRes = R.drawable.calendar,"calendar_screen",navController)
