@@ -42,6 +42,7 @@ fun TaskManagerScreen() {
     val navController = LocalNavController.current
     var description by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
+    var day by remember { mutableStateOf("") }
     Box(
         modifier = Modifier
             .fillMaxSize()
