@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                             TaskManagerScreen()
                         }
                         composable("calendar_screen"){
-                            TaskManagerScreen()
+                            CalendarScreen()
                         }
 
 
