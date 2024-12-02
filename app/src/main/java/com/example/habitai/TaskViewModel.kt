@@ -18,7 +18,7 @@ class TaskViewModel : ViewModel() {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-flash",
-        apiKey = BuildConfig.apiKey
+        apiKey = "AIzaSyDkSfI0uk52v3-8IFbvJ2afRxvCYQk9Yfc"
     )
 
     fun sendPrompt(prompt: String) {

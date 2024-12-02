@@ -46,6 +46,7 @@ fun RegisterScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val navController = LocalNavController.current
         Text(text = "Register", fontSize = 40.sp)
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -100,6 +101,7 @@ fun RegisterScreen() {
                                     "Registration Successful!",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                navController.navigate("login_screen")
                             } else {
                                 Toast.makeText(
                                     context,
@@ -126,7 +128,7 @@ fun RegisterScreen() {
 
         Button(
             onClick = {
-
+                navController.navigate("login_screen")
             },
             modifier = Modifier.border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(26.dp)).fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
