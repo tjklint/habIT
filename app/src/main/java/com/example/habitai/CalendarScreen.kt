@@ -34,92 +34,90 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen() {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFFCC66)),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TopAppBar(
-                title = {
-                    Text(text = "HabitAI", color = Color.Black, fontSize = 20.sp)
-                },
-                actions = {
-                    IconButton(onClick = { }) {
-                        Image(
-                            painter = painterResource(id = R.drawable.sun),
-                            contentDescription = "Icon",
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFF5A234)),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            listOf("M", "T", "W", "TH", "F", "S", "SU").forEach { day ->
-                Text(text = day, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFFCC66))
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .fillMaxSize()
+                .padding(16.dp) // Padding is applied only to the rest of the content
         ) {
-            repeat(4) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    repeat(7) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .border(1.dp, Color.Black)
-                        )
+            Spacer(modifier = Modifier.height(64.dp)) // Spacer to account for the TopAppBar height
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                listOf("M", "T", "W", "TH", "F", "S", "SU").forEach { day ->
+                    Text(text = day, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp))
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFFFCC66))
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(4) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        repeat(7) {
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .border(1.dp, Color.Black)
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(onClick = { /* Handle Delete */ }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
-                Text("DELETE")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = { /* Handle Delete */ }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
+                    Text("DELETE")
+                }
+                Button(onClick = { /* Handle Home */ }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
+                    Text("HOME")
+                }
             }
-            Button(onClick = { /* Handle Home */ }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
-                Text("HOME")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { /* Handle Add */ },
+                colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66)),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("ADD")
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { /* Handle Add */ },
-            colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66)),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("ADD")
-        }
+        // TopAppBar placed outside the column
+        TopAppBar(
+            title = {
+                Text(text = "HabitAI", color = Color.Black, fontSize = 20.sp)
+            },
+            actions = {
+                IconButton(onClick = { }) {
+                    Image(
+                        painter = painterResource(id = R.drawable.sun),
+                        contentDescription = "Icon",
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color(0xFFF5A234)),
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
