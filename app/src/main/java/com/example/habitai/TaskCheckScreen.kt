@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -21,6 +23,12 @@ fun TaskCheckScreen() {
     // Create a list of bools for checkboxes
     val taskStates = remember { mutableStateListOf(false, false, false, false, false, false) }
     val navController = LocalNavController.current
+    val CustomFontFamily = FontFamily(
+        Font(R.font.yomogi, FontWeight.Bold)
+    )
+    val CustomFontFamily2 = FontFamily(
+        Font(R.font.juliusone,FontWeight.Bold)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -28,7 +36,7 @@ fun TaskCheckScreen() {
 
         TopAppBar(
             title = {
-                Text(text = "HabitAI", color = Color.Black)
+                Text(text = "HabitAI", color = Color.Black, fontFamily = CustomFontFamily)
             },
             actions = {
                 IconButton(onClick = { /* Add functionality for icon */ }) {
@@ -49,7 +57,8 @@ fun TaskCheckScreen() {
             color = Color.Black,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            fontFamily = CustomFontFamily2
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -70,13 +79,15 @@ fun TaskCheckScreen() {
                     Text(
                         text = "Title:",
                         color = Color.Black,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = CustomFontFamily2
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Description:",
                         color = Color.Black,
-                        fontWeight = FontWeight.Normal
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = CustomFontFamily2
                     )
                 }
             }
@@ -99,13 +110,13 @@ fun TaskCheckScreen() {
                 },
                 colors = ButtonDefaults.buttonColors(Color(0xFFFFC107))
             ) {
-                Text(text = "RESET", color = Color.Black)
+                Text(text = "RESET", color = Color.Black,fontFamily = CustomFontFamily2,fontSize = 15.sp)
             }
             Button(
                 onClick = {  },
                 colors = ButtonDefaults.buttonColors(Color(0xFFFFC107))
             ) {
-                Text(text = "SAVE", color = Color.Black)
+                Text(text = "SAVE", color = Color.Black,fontFamily = CustomFontFamily2,fontSize = 15.sp)
             }
         }
 
@@ -119,15 +130,15 @@ fun TaskCheckScreen() {
             Button(
                 onClick = { navController.navigate("home_screen") },
                 colors = ButtonDefaults.buttonColors(Color(0xFFFFC107)),
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 23.dp)
             ) {
-                Text(text = "HOME", color = Color.Black)
+                Text(text = "HOME", color = Color.Black,fontFamily = CustomFontFamily2, fontSize = 15.sp)
             }
             Button(
                 onClick = { navController.navigate("calendar_screen") },
                 colors = ButtonDefaults.buttonColors(Color(0xFFFFC107))
             ) {
-                Text(text = "CALENDAR", color = Color.Black)
+                Text(text = "CALENDAR", color = Color.Black,fontFamily = CustomFontFamily2,fontSize = 15.sp)
             }
         }
     }

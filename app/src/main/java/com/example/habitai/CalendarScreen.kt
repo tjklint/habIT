@@ -27,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +36,13 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen() {
+    val CustomFontFamily = FontFamily(
+        Font(R.font.yomogi, FontWeight.Bold)
+    )
+    val CustomFontFamily2 = FontFamily(
+        Font(R.font.juliusone,FontWeight.Bold)
+    )
+    val navController = LocalNavController.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -84,10 +93,10 @@ fun CalendarScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(onClick = { /* Handle Delete */ }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
-                    Text("DELETE")
+                    Text("DELETE",fontFamily = CustomFontFamily2,color = Color.Black,fontSize = 15.sp)
                 }
-                Button(onClick = { /* Handle Home */ }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
-                    Text("HOME")
+                Button(onClick = { navController.navigate("home_screen") }, colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66))) {
+                    Text("HOME",fontFamily = CustomFontFamily2,color = Color.Black,fontSize = 15.sp)
                 }
             }
 
@@ -98,14 +107,14 @@ fun CalendarScreen() {
                 colors = ButtonDefaults.buttonColors(Color(0xFFFFCC66)),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("ADD")
+                Text("ADD",fontFamily = CustomFontFamily2, color =Color.Black, fontSize = 15.sp)
             }
         }
 
         // TopAppBar placed outside the column
         TopAppBar(
             title = {
-                Text(text = "HabitAI", color = Color.Black, fontSize = 20.sp)
+                Text(text = "HabitAI", color = Color.Black, fontSize = 20.sp, fontFamily = CustomFontFamily)
             },
             actions = {
                 IconButton(onClick = { }) {

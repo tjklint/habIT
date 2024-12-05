@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -20,11 +22,15 @@ import com.example.habitai.ui.theme.HabITAITheme
 @Composable
 fun HomeScreen() {
     val navController = LocalNavController.current
+    val CustomFontFamily = FontFamily(
+        Font(R.font.yomogi, FontWeight.Bold)
+    )
+
     Column(modifier = Modifier.fillMaxSize()) {
 
         TopAppBar(
             title = {
-                Text(text = "HabitAI", color = Color.Black)
+                Text(text = "HabitAI", color = Color.Black,fontFamily = CustomFontFamily)
             },
             actions = {
                 IconButton(onClick = { /* Add functionality for icon */ }) {
@@ -65,6 +71,9 @@ fun HomeScreen() {
 
 @Composable
 fun ButtonWithImage(text: String, imageRes: Int,navigation:String,navController: NavController) {
+    val CustomFontFamily2 = FontFamily(
+        Font(R.font.juliusone,FontWeight.Bold)
+    )
     Button(
         onClick = {navController.navigate(navigation) },
         modifier = Modifier
@@ -84,7 +93,7 @@ fun ButtonWithImage(text: String, imageRes: Int,navigation:String,navController:
                 contentDescription = text,
                 modifier = Modifier.size(48.dp).padding(end = 16.dp)
             )
-            Text(text = text, style = MaterialTheme.typography.bodyLarge, color = Color.Black)
+            Text(text = text, style = MaterialTheme.typography.bodyLarge, color = Color.Black,fontFamily = CustomFontFamily2)
         }
     }
 }

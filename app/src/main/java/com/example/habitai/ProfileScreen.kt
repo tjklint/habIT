@@ -25,6 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +37,12 @@ import com.example.habitai.ui.theme.HabITAITheme
 @Composable
 fun ProfileScreen() {
     val navController = LocalNavController.current
+    val CustomFontFamily = FontFamily(
+        Font(R.font.yomogi, FontWeight.Bold)
+    )
+    val CustomFontFamily2 = FontFamily(
+        Font(R.font.juliusone,FontWeight.Bold)
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -41,7 +50,7 @@ fun ProfileScreen() {
     ) {
         TopAppBar(
             title = {
-                Text(text = "HabitAI", color = Color.Black, fontSize = 20.sp)
+                Text(text = "HabitAI", color = Color.Black, fontSize = 20.sp, fontFamily = CustomFontFamily)
             },
             actions = {
                 IconButton(onClick = {  }) {
@@ -76,12 +85,13 @@ fun ProfileScreen() {
             ) {
                 Text(
                     text = "Your Profile",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    fontFamily = CustomFontFamily2
                 )
-                Text(text = "Username:")
-                Text(text = "Change Password")
-                Text(text = "Email:")
-                Text(text = "Created at:")
+                Text(text = "Username:",fontFamily = CustomFontFamily2)
+                Text(text = "Change Password",fontFamily = CustomFontFamily2)
+                Text(text = "Email:",fontFamily = CustomFontFamily2)
+                Text(text = "Created at:",fontFamily = CustomFontFamily2)
             }
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -94,7 +104,7 @@ fun ProfileScreen() {
                     .background(Color(0xFFFFE082), shape = RoundedCornerShape(8.dp)),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD97A))
             ) {
-                Text(text = "HOME",color = Color.Black)
+                Text(text = "HOME",color = Color.Black,fontFamily = CustomFontFamily2)
             }
         }
     }
