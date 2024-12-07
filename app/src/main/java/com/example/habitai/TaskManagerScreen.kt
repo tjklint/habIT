@@ -1,5 +1,7 @@
 package com.example.habitai
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,11 +32,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habitai.ui.theme.HabITAITheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +50,10 @@ fun TaskManagerScreen() {
     var description by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
     var day by remember { mutableStateOf("") }
+    val db = FirebaseFirestore.getInstance()
+    val context = LocalContext.current
+    val auth = Firebase.auth
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,7 +128,39 @@ fun TaskManagerScreen() {
             Spacer(modifier = Modifier.height(60.dp))
 
             Button(
-                onClick = {  },
+                onClick = {
+                    val currentUser = auth.currentUser
+                    if (currentUser != null && title.isNotEmpty()) {
+                        val userId = currentUser.uid
+                        val newTask = hashMapOf(
+                            "userId" to userId,
+                            "taskName" to title,
+                            "description" to description,
+                            "completed" to false,
+                            "createdAt" to FieldValue.serverTimestamp()
+                        )
+
+                        db.collection("tasks").add(newTask)
+                            .addOnSuccessListener { documentReference ->
+                                Toast.makeText(
+                                    context,
+                                    "Task added successfully!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                title = ""
+                                description = ""
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(
+                                    context,
+                                    "Error adding task: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    } else {
+                        Toast.makeText(context, "Please enter a task name", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
@@ -126,6 +169,9 @@ fun TaskManagerScreen() {
             ) {
                 Text(text = "ADD", color = Color.Black)
             }
+
+
+
             Spacer(modifier = Modifier.height(30.dp))
             Button(
                 onClick = {
@@ -153,6 +199,22 @@ fun TaskManagerScreen() {
             }
         }
     }
+}
+
+fun addTaskForUser(userId: String, taskId: String, taskName: String) {
+    val db = FirebaseFirestore.getInstance()
+    val task = hashMapOf(
+        "taskId" to taskId,
+        "taskName" to taskName
+    )
+
+    db.collection("users").document(userId).update("tasks", FieldValue.arrayUnion(task))
+        .addOnSuccessListener {
+            Log.d("Firestore", "Task added successfully")
+        }
+        .addOnFailureListener { exception ->
+            Log.e("Firestore", "Error adding task: ${exception.message}")
+        }
 }
 @Preview(showBackground = true)
 @Composable
