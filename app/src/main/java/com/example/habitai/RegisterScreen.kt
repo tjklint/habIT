@@ -23,6 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.habitai.ui.theme.HabITAITheme
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -38,7 +41,9 @@ fun RegisterScreen() {
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
-
+    val CustomFontFamily = FontFamily(
+        Font(R.font.yomogi, FontWeight.Bold)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,14 +52,14 @@ fun RegisterScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val navController = LocalNavController.current
-        Text(text = "Register", fontSize = 40.sp)
+        Text(text = "Register", fontSize = 40.sp,fontFamily = CustomFontFamily)
 
         Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text(text = "Username") },
+            label = { Text(text = "Username",fontFamily = CustomFontFamily,fontSize = 25.sp) },
             modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFFFFD97A),
@@ -69,7 +74,7 @@ fun RegisterScreen() {
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Password") },
+            label = { Text(text = "Password",fontFamily = CustomFontFamily,fontSize = 25.sp) },
             modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFFFFD97A),
@@ -121,7 +126,7 @@ fun RegisterScreen() {
             )
 
         ) {
-            Text(text = "Register")
+            Text(text = "Register",fontFamily = CustomFontFamily,fontSize = 25.sp)
         }
 
         Spacer(modifier = Modifier.height(26.dp))
@@ -137,7 +142,7 @@ fun RegisterScreen() {
             )
 
         ) {
-            Text(text = "Login")
+            Text(text = "Login",fontFamily = CustomFontFamily,fontSize = 25.sp)
         }
 
         Spacer(modifier = Modifier.height(26.dp))

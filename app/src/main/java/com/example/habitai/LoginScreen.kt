@@ -46,7 +46,9 @@ fun LoginScreen() {
     val context = LocalContext.current
     val auth = Firebase.auth
     val db = Firebase.firestore
-
+    val CustomFontFamily = FontFamily(
+        Font(R.font.yomogi, FontWeight.Bold)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,14 +58,14 @@ fun LoginScreen() {
     ) {
 
         val navController = LocalNavController.current
-        Text(text = "Login", fontSize = 40.sp)
+        Text(text = "Login", fontSize = 40.sp,fontFamily = CustomFontFamily)
 
         Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text(text = "Username") },
+            label = { Text(text = "Username",fontFamily = CustomFontFamily,fontSize = 25.sp) },
             modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFFFFD97A),
@@ -78,7 +80,7 @@ fun LoginScreen() {
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Password") },
+            label = { Text(text = "Password",fontFamily = CustomFontFamily,fontSize = 25.sp) },
             modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFFFFD97A),
@@ -141,7 +143,7 @@ fun LoginScreen() {
             )
 
         ) {
-            Text(text = "Login")
+            Text(text = "Login",fontFamily = CustomFontFamily,fontSize = 25.sp)
         }
 
         Spacer(modifier = Modifier.height(26.dp))
@@ -157,7 +159,7 @@ fun LoginScreen() {
             )
 
         ) {
-            Text(text = "Register")
+            Text(text = "Register",fontFamily = CustomFontFamily,fontSize = 25.sp)
         }
 
         Spacer(modifier = Modifier.height(26.dp))
