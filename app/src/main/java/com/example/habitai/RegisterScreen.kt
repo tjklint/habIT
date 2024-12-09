@@ -97,20 +97,34 @@ fun RegisterScreen() {
                             if (task.isSuccessful) {
                                 val uid = task.result?.user?.uid
                                 //save the username and UID in Firestore
-                                val userData = hashMapOf("username" to username, "uid" to uid)
-                                uid?.let {
-                                    db.collection("users").document(it).set(userData)
+                                if (uid != null) {
+                                    val userData = hashMapOf(
+                                        "username" to username,
+                                        "uid" to uid,
+                                        "tasks" to emptyList<Map<String, Any>>()
+                                    )
+                                    db.collection("users").document(uid)
+                                        .set(userData)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(
+                                                context,
+                                                "Registration Successful!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            navController.navigate("login_screen")
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Toast.makeText(
+                                                context,
+                                                "Firestore Error: ${exception.message}",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                 }
-                                Toast.makeText(
-                                    context,
-                                    "Registration Successful!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                navController.navigate("login_screen")
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "${task.exception?.message}",
+                                    "Auth Error: ${task.exception?.message}",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             HabITAITheme {
                 val navController = rememberNavController()
                 CompositionLocalProvider(LocalNavController provides navController) {
-                    NavHost(navController, startDestination = "taskcheck_screen") {
+                    NavHost(navController, startDestination = "login_screen") {
                         composable("login_screen") {
                             LoginScreen()
                         }

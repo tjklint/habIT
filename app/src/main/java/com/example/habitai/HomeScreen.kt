@@ -59,7 +59,7 @@ fun HomeScreen() {
             ButtonWithImage(text = "Add Tasks", imageRes = R.drawable.smiling_sun,"taskmanager_screen",navController)
 
             // "View Calendar" Button
-            ButtonWithImage(text = "View Calendar", imageRes = R.drawable.calendar,"calendar_screen",navController)
+            ButtonWithImage(text = "View Tasks", imageRes = R.drawable.calendar,"taskcheck_screen",navController)
 
             // "View Profile" Button
             ButtonWithImage(text = "View Profile", imageRes = R.drawable.profile,"profile_screen",navController)
