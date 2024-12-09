@@ -1,16 +1,13 @@
 package com.example.habitai
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,22 +16,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.example.habitai.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen(
     taskViewModel: TaskViewModel = viewModel()
 ) {
-    val placeholderPrompt = "Ask about tasks, routines, or discipline..."
-    val placeholderResult = "Your response will appear here."
-    var prompt by rememberSaveable { mutableStateOf(placeholderPrompt) }
-    var result by rememberSaveable { mutableStateOf(placeholderResult) }
     val uiState by taskViewModel.uiState.collectAsState()
+    var prompt by rememberSaveable { mutableStateOf("") }
+    var result by rememberSaveable { mutableStateOf("Your response will appear here.") }
 
     Column(
         modifier = Modifier
@@ -43,58 +39,35 @@ fun TaskScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Improve Your Routine",
+            text = "Ask About Your Tasks",
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp),
             color = Color.Black,
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
-        Row(
+        // Input field for user query
+        TextField(
+            value = prompt,
+            onValueChange = { prompt = it },
+            label = { Text(text = "Your Query", color = Color.Black) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                value = prompt,
-                onValueChange = { prompt = it },
-                label = { Text(text = "Your Query", color = Color.Black) },
-                modifier = Modifier
-                    .weight(1f)
-                    .border(
-                        width = 2.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .padding(4.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFFFD97A),
-                    cursorColor = Color.Blue,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
+                .padding(8.dp),
+            textStyle = LocalTextStyle.current.copy(color = Color.Black),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0xFFFFD97A),
+                cursorColor = Color.Blue,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             )
+        )
 
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(
-                onClick = { taskViewModel.sendPrompt(prompt) },
-                enabled = prompt.isNotEmpty(),
-                modifier = Modifier
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .border(
-                        width = 2.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFD97A),
-                    contentColor = Color.Black
-                )
-            ) {
-                Text(text = "Ask")
-            }
+        Button(
+            onClick = { taskViewModel.fetchAndSendPrompt(prompt) },
+            enabled = prompt.isNotEmpty(),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("Ask AI")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -104,59 +77,23 @@ fun TaskScreen(
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(8.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(12.dp)
-                )
                 .background(Color(0xFFFFD97A))
                 .padding(16.dp)
         ) {
             when (uiState) {
-                is UiState.Loading -> CircularProgressIndicator(
-                    color = Color.Black,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 is UiState.Error -> {
-                    result = (uiState as UiState.Error).errorMessage
-                    Text(
-                        text = result,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.align(Alignment.TopStart)
-                    )
+                    val errorMessage = (uiState as UiState.Error).errorMessage
+                    Text(text = errorMessage, color = Color.Red, modifier = Modifier.align(Alignment.Center))
                 }
                 is UiState.Success -> {
                     result = (uiState as UiState.Success).outputText
-                    Text(
-                        text = result,
-                        color = Color.Black,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.align(Alignment.TopStart)
-                    )
+                    Text(text = result, color = Color.Black, modifier = Modifier.align(Alignment.TopStart))
                 }
                 else -> {
-                    Text(
-                        text = placeholderResult,
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.align(Alignment.TopStart)
-                    )
+                    Text(text = result, color = Color.Gray, modifier = Modifier.align(Alignment.Center))
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Image(
-            painter = painterResource(id = R.drawable.smiling_sun),
-            contentDescription = "Footer Image",
-            modifier = Modifier
-                .size(100.dp)
-                .align(Alignment.CenterHorizontally)
-        )
     }
 }
