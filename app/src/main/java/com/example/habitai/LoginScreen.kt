@@ -32,7 +32,10 @@ import androidx.compose.ui.unit.sp
 import com.example.habitai.ui.theme.HabITAITheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import java.time.LocalDate
+import java.time.ZoneId
 
 
 //val customFontFamily = FontFamily(
@@ -95,7 +98,6 @@ fun LoginScreen() {
         Button(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty()) {
-                    //dummy email format for Firebase Authentication
                     val email = "$username@habit.com"
 
                     auth.signInWithEmailAndPassword(email, password)
@@ -103,25 +105,50 @@ fun LoginScreen() {
                             if (task.isSuccessful) {
                                 val uid = task.result?.user?.uid
                                 uid?.let {
-                                    db.collection("users").document(it).get()
-                                        .addOnSuccessListener { document ->
-                                            if (document.exists()) {
-                                                val storedUsername = document.getString("username")
-                                                if (storedUsername == username)
-                                                {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Login Successful!",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
-                                                    navController.navigate("home_screen")
+                                    val userDoc = db.collection("users").document(it)
+
+                                    userDoc.get().addOnSuccessListener { document ->
+                                        if (document.exists()) {
+                                            val storedUsername = document.getString("username")
+                                            val lastLoginTimestamp = document.getTimestamp("lastLogin")
+                                            val tasksCompleted = document.getBoolean("tasksCompleted") ?: false
+
+                                            if (storedUsername == username) {
+                                                // Get current date
+                                                val currentDate = LocalDate.now()
+                                                val lastLoginDate = lastLoginTimestamp?.toDate()?.toInstant()
+                                                    ?.atZone(ZoneId.systemDefault())?.toLocalDate()
+
+                                                if (lastLoginDate == null || lastLoginDate.isBefore(currentDate)) {
+                                                    // Reset tasksCompleted for a new day
+                                                    userDoc.update(
+                                                        mapOf(
+                                                            "tasksCompleted" to false,
+                                                            "lastLogin" to FieldValue.serverTimestamp()
+                                                        )
+                                                    )
+                                                } else {
+                                                    // Update only the login timestamp
+                                                    userDoc.update("lastLogin", FieldValue.serverTimestamp())
                                                 }
+
+                                                Toast.makeText(
+                                                    context,
+                                                    "Login Successful!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                navController.navigate("home_screen")
+                                            } else {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Incorrect Password or Username",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         }
+                                    }
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 Toast.makeText(
                                     context,
                                     "Incorrect Password or Username",
@@ -129,21 +156,19 @@ fun LoginScreen() {
                                 ).show()
                             }
                         }
-                }
-                else
-                {
+                } else {
                     Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 }
-
             },
-            modifier = Modifier.border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(26.dp)).fillMaxWidth(),
+            modifier = Modifier
+                .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(26.dp))
+                .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFFFD97A),
                 contentColor = Color.Black
             )
-
         ) {
-            Text(text = "Login",fontFamily = CustomFontFamily,fontSize = 25.sp)
+            Text(text = "Login", fontFamily = CustomFontFamily, fontSize = 25.sp)
         }
 
         Spacer(modifier = Modifier.height(26.dp))

@@ -41,7 +41,10 @@ fun TaskCheckScreen() {
                 .whereEqualTo("userId", currentUser.uid)
                 .get()
                 .addOnSuccessListener { result ->
-                    tasks = result.documents.map { it.data ?: emptyMap() }
+                    tasks = result.documents.map { document ->
+                        val data = document.data ?: emptyMap()
+                        data + mapOf("id" to document.id) // Add document ID to data
+                    }
                     loading = false
                 }
                 .addOnFailureListener {
@@ -91,6 +94,8 @@ fun TaskCheckScreen() {
             )
         } else {
             tasks.forEach { task ->
+                val taskId = task["id"] as? String // Get the document ID
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,9 +103,23 @@ fun TaskCheckScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     var isChecked by remember { mutableStateOf(task["completed"] as? Boolean ?: false) }
+
                     Checkbox(
                         checked = isChecked,
-                        onCheckedChange = { isChecked = it }
+                        onCheckedChange = { checked ->
+                            isChecked = checked
+                            // Update the `completed` field in Firestore
+                            if (taskId != null) {
+                                db.collection("tasks").document(taskId)
+                                    .update("completed", checked)
+                                    .addOnSuccessListener {
+                                        // Successfully updated
+                                    }
+                                    .addOnFailureListener { e ->
+                                        // Handle error, e.g., show a toast or log
+                                    }
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Column {
@@ -120,26 +139,25 @@ fun TaskCheckScreen() {
                     }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                onClick = { navController.navigate("home_screen") },
-                colors = ButtonDefaults.buttonColors(Color(0xFFFFC107)),
-                modifier = Modifier.padding(start = 23.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(text = "HOME", color = Color.Black, fontFamily = CustomFontFamily2, fontSize = 15.sp)
-            }
-            Button(
-                onClick = { navController.navigate("calendar_screen") },
-                colors = ButtonDefaults.buttonColors(Color(0xFFFFC107))
-            ) {
-                Text(text = "CALENDAR", color = Color.Black, fontFamily = CustomFontFamily2, fontSize = 15.sp)
+                Button(
+                    onClick = { navController.navigate("home_screen") },
+                    colors = ButtonDefaults.buttonColors(Color(0xFFFFC107)),
+                    modifier = Modifier.padding(start = 23.dp)
+                ) {
+                    Text(
+                        text = "HOME",
+                        color = Color.Black,
+                        fontFamily = CustomFontFamily2,
+                        fontSize = 15.sp
+                    )
+                }
             }
         }
     }

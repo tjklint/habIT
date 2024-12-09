@@ -42,6 +42,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +54,7 @@ fun TaskManagerScreen() {
     val db = FirebaseFirestore.getInstance()
     val context = LocalContext.current
     val auth = Firebase.auth
+    val uniqueId = UUID.randomUUID().toString()
 
     Box(
         modifier = Modifier
@@ -134,14 +136,15 @@ fun TaskManagerScreen() {
                         val userId = currentUser.uid
                         val newTask = hashMapOf(
                             "userId" to userId,
+                            "taskId" to uniqueId,
                             "taskName" to title,
                             "description" to description,
                             "completed" to false,
                             "createdAt" to FieldValue.serverTimestamp()
                         )
 
-                        db.collection("tasks").add(newTask)
-                            .addOnSuccessListener { documentReference ->
+                        db.collection("tasks").document(uniqueId).set(newTask)
+                            .addOnSuccessListener {
                                 Toast.makeText(
                                     context,
                                     "Task added successfully!",
