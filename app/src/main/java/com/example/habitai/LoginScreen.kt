@@ -111,7 +111,6 @@ fun LoginScreen() {
                                         if (document.exists()) {
                                             val storedUsername = document.getString("username")
                                             val lastLoginTimestamp = document.getTimestamp("lastLogin")
-                                            val tasksCompleted = document.getBoolean("tasksCompleted") ?: false
 
                                             if (storedUsername == username) {
                                                 // Get current date
@@ -120,15 +119,31 @@ fun LoginScreen() {
                                                     ?.atZone(ZoneId.systemDefault())?.toLocalDate()
 
                                                 if (lastLoginDate == null || lastLoginDate.isBefore(currentDate)) {
-                                                    // Reset tasksCompleted for a new day
+                                                    // Reset tasksCompleted state to false for new day
+                                                    db.collection("tasks")
+                                                        .whereEqualTo("userId", uid)
+                                                        .get()
+                                                        .addOnSuccessListener { tasks ->
+                                                            for (taskDocument in tasks) {
+                                                                val taskId = taskDocument.id
+                                                                db.collection("tasks").document(taskId)
+                                                                    .update("completed", false)
+                                                                    .addOnSuccessListener {
+                                                                        // Successfully updated
+                                                                    }
+                                                                    .addOnFailureListener { e ->
+                                                                        // Handle error, e.g., log it
+                                                                    }
+                                                            }
+                                                        }
+                                                    // Update the login timestamp
                                                     userDoc.update(
                                                         mapOf(
-                                                            "tasksCompleted" to false,
                                                             "lastLogin" to FieldValue.serverTimestamp()
                                                         )
                                                     )
                                                 } else {
-                                                    // Update only the login timestamp
+                                                    // Update only the login timestamp for the same day
                                                     userDoc.update("lastLogin", FieldValue.serverTimestamp())
                                                 }
 
