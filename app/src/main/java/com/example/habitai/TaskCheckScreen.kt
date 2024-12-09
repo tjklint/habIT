@@ -122,7 +122,9 @@ fun TaskCheckScreen() {
                         }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Column {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(
                             text = "Title: ${task["taskName"] ?: ""}",
                             color = Color.Black,
@@ -137,9 +139,28 @@ fun TaskCheckScreen() {
                             fontFamily = CustomFontFamily2
                         )
                     }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(
+                        onClick = {
+                            // Delete the task from Firestore
+                            if (taskId != null) {
+                                db.collection("tasks").document(taskId)
+                                    .delete()
+                                    .addOnSuccessListener {
+                                        // Successfully deleted
+                                        tasks = tasks.filter { it["id"] != taskId }
+                                    }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.sun),
+                            contentDescription = "Delete Task",
+                            tint = Color.Red
+                        )
+                    }
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(

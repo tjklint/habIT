@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDate
 
 
 //val customFontFamily = FontFamily(
@@ -56,32 +57,20 @@ fun RegisterScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
+        CustomTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text(text = "Username",fontFamily = CustomFontFamily,fontSize = 25.sp) },
-            modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFFFFD97A),
-                cursorColor = Color.Blue,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
+            label = "Username",
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        TextField(
+        CustomTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Password",fontFamily = CustomFontFamily,fontSize = 25.sp) },
-            modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFFFFD97A),
-                cursorColor = Color.Blue,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
+            label = "Password",
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(26.dp))
@@ -101,6 +90,7 @@ fun RegisterScreen() {
                                     val userData = hashMapOf(
                                         "username" to username,
                                         "uid" to uid,
+                                        "createdAt" to com.google.firebase.Timestamp.now(),
                                         "tasks" to emptyList<Map<String, Any>>()
                                     )
                                     db.collection("users").document(uid)
@@ -113,18 +103,12 @@ fun RegisterScreen() {
                                             ).show()
                                             navController.navigate("login_screen")
                                         }
-                                        .addOnFailureListener { exception ->
-                                            Toast.makeText(
-                                                context,
-                                                "Firestore Error: ${exception.message}",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
                                 }
-                            } else {
+                            }
+                            else {
                                 Toast.makeText(
                                     context,
-                                    "Auth Error: ${task.exception?.message}",
+                                    "Username already in use",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
