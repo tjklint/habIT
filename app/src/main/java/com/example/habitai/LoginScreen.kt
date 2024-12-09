@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -38,9 +39,43 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 
-//val customFontFamily = FontFamily(
-    //Font(R.font.yomogi)
-//)
+@Composable
+fun CustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
+            .background(Color(0xFFFFD97A))
+            .padding(16.dp)
+    ) {
+        if (value.isEmpty()) {
+            Text(
+                text = label,
+                color = Color.Gray,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.yomogi, FontWeight.Bold)),
+                    fontWeight = FontWeight.Normal
+                ),
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+        }
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            textStyle = TextStyle(
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.yomogi, FontWeight.Bold)),
+                fontWeight = FontWeight.Normal
+            ),
+            modifier = Modifier.fillMaxWidth().align(Alignment.CenterStart)
+        )
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen() {
@@ -65,32 +100,20 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        TextField(
+        CustomTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text(text = "Username",fontFamily = CustomFontFamily,fontSize = 25.sp) },
-            modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFFFFD97A),
-                cursorColor = Color.Blue,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
+            label = "Username (case sensitive)",
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        TextField(
+        CustomTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Password",fontFamily = CustomFontFamily,fontSize = 25.sp) },
-            modifier = Modifier.fillMaxWidth().border(width = 2.dp, color = Color.Black),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFFFFD97A),
-                cursorColor = Color.Blue,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
+            label = "Password (case sensitive)",
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(26.dp))
