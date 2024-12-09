@@ -1,6 +1,10 @@
 package com.example.habitai
 
 import android.util.Log
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.GenerativeModel
@@ -26,7 +30,7 @@ class TaskViewModel : ViewModel() {
     )
 
     /**
-     * Fetch user tasks and name, then send the refined prompt to Gemini.
+     * Fetch user tasks, name, and mood level, then send the refined prompt to Gemini.
      */
     fun fetchAndSendPrompt(prompt: String) {
         val currentUser = auth.currentUser
@@ -40,6 +44,15 @@ class TaskViewModel : ViewModel() {
         db.collection("users").document(currentUser.uid).get()
             .addOnSuccessListener { userDoc ->
                 val email = userDoc.getString("username") ?: "Unknown User"
+                val moodLevel = userDoc.getLong("moodLevel")?.toInt() ?: 1 // Default to 1 (nice)
+                val moodDescription = when (moodLevel) {
+                    1 -> "super nice"
+                    2 -> "kind"
+                    3 -> "neutral"
+                    4 -> "a little harsh"
+                    5 -> "super mean"
+                    else -> "unknown"
+                }
 
                 db.collection("tasks")
                     .whereEqualTo("userId", currentUser.uid)
@@ -52,14 +65,14 @@ class TaskViewModel : ViewModel() {
                             Task(taskName, description, completed)
                         }
 
-                        // Refined prompt with user name and tasks
+                        // Refined prompt with user name, mood level, and tasks
                         val refinedPrompt = """
                             You are an expert in productivity, discipline, task management, and routines.
                             Only provide information about tasks, discipline, or routines. 
                             Be concise and provide practical advice. 
                             Cite relevant books, studies, or research if applicable.
                             
-                            The user's name is $email.
+                            The user's name is $email, and they prefer responses to be $moodDescription (Mood Level: $moodLevel, if you are mean, do not belittle, be harsh).
                             Here are their tasks:
                             ${tasks.joinToString("\n") { "- ${it.title}: ${it.description} (${if (it.completed) "completed" else "incomplete"})" }}
                             
@@ -93,7 +106,9 @@ class TaskViewModel : ViewModel() {
 
                 response.text?.let {
                     Log.d("TaskViewModel", "Received response from Gemini: $it")
-                    _uiState.value = UiState.Success(it)
+                    // Format response
+                    val formattedResponse = formatGeminiResponse(it)
+                    _uiState.value = UiState.Success(formattedResponse.toString())
                 } ?: run {
                     _uiState.value = UiState.Error("No response from AI.")
                 }
@@ -103,6 +118,44 @@ class TaskViewModel : ViewModel() {
             }
         }
     }
-}
 
+    /**
+     * Format Gemini response to handle `**` for bold text.
+     */
+    private fun formatGeminiResponse(response: String): AnnotatedString {
+        val builder = AnnotatedString.Builder()
+
+        var index = 0
+        while (index < response.length) {
+            val startBold = response.indexOf("**", index)
+            if (startBold == -1) {
+                // No more formatting, append the rest
+                builder.append(response.substring(index))
+                break
+            }
+
+            // Append text before bold
+            builder.append(response.substring(index, startBold))
+
+            // Find the closing `**`
+            val endBold = response.indexOf("**", startBold + 2)
+            if (endBold == -1) {
+                // No closing `**`, append the rest as-is
+                builder.append(response.substring(startBold))
+                break
+            }
+
+            // Bold text
+            val boldText = response.substring(startBold + 2, endBold)
+            builder.withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(boldText)
+            }
+
+            // Continue after the closing `**`
+            index = endBold + 2
+        }
+
+        return builder.toAnnotatedString()
+    }
+}
 
