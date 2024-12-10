@@ -18,21 +18,21 @@ HabIT is a personalized app designed to help users build consistent morning rout
 - Visual Analytics: A calendar view allows users to review their streaks, success rates, and patterns over time.
 
 ---
-
-# HabIT: Better Habits, Better Living
+<div align="center">
+  <h1> HabIT: Better Habits, Better Living </h1>
+</div>
 
 <div align="center">
-  <h2>HabIT</h2>
   <h3>An AI-powered habit tracker to keep you accountable, anytime, anywhere</h3>
 </div>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white" alt="Google Gemini">
   <img src="https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin">
+  <img src="https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34" alt="Firebase">
+  <img src="https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Google Cloud">
+  <img src="https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white" alt="Google Gemini">
   <img src="https://img.shields.io/badge/android%20studio-346ac1?style=for-the-badge&logo=android%20studio&logoColor=white" alt="Android Studio">
   <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android">
-  <img src="https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Google Cloud">
-  <img src="https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34" alt="Firebase">
 </div>
 
 ## 📖 About the Project
@@ -43,7 +43,6 @@ HabIT is your personal habit coach, blending cutting-edge AI with habit tracking
 - **AI-Powered Guidance:** Receive personalized habit advice with Google Gemini.
 - **Dynamic Mood Levels:** Customize how nice (or mean!) your AI responses are, from "super nice" to "super mean."
 - **Smart Habit Tracking:** Manage tasks, mark completions, and visualize progress.
-- **Reminders and Notifications:** Never forget a habit with smart alerts tailored to your schedule.
 - **Real-Time Sync:** Securely sync habits and progress with Firebase.
 - **Simple and Clean UI:** Built with Jetpack Compose for an intuitive experience.
 
